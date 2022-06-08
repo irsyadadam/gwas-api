@@ -31,6 +31,7 @@ http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/
 
 Download Dependencies:
 ```
+git clone git@github.com:irsyadadam/gwas-api.git
 pip install -r requirements.txt
 ```
 
