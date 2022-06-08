@@ -14,10 +14,25 @@ Object will then extract all GWAS Catalogs that are associated with query, and d
 
 The goal of this repos is to extract GWAS summary statistics such that the data can be easily streamlined into the sc-DRS pipeline for transcriptomics-genomics integration. 
 
+**Notes**:
+
+HTTP Query Endpoint: 
+
+https://www.ebi.ac.uk/gwas/api/search
+
+HTTP GWAS Summary Statistics Endpoint: 
+
+http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/
+
+
 ----------
 
 ## Usage:
 
+Download Dependencies:
+```
+pip install -r requirements.txt
+```
 
 The following are the parameters for the API Wrapper:
 
@@ -30,6 +45,15 @@ optional arguments:
   -h, --help     show this help message and exit
   --query QUERY  query to extract relevant gwas ids
 ```
+
+Example Usage:
+
+The following command will create a directory names query_heart and download all GWAS summary statistics of GWAS studies correlating to the query "heart".
+
+```
+python3 main.py --query heart
+```
+
 ------------
 
 **TODOs**
