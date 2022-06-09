@@ -4,19 +4,22 @@ import requests
 #to parse data
 import pandas as pd
 import numpy as np
+import ast
 
 #iteration tracking
 from tqdm import tqdm
 
 #downloading
-import wget
+#import wget
 
 
 class download_gwas_summary_stats:
     def __init__(self, index: str):
         self.index = self.parse_index(index)
         #TODO: get an iterator that iterates through the list and then calls def extract_gwas for everything in the list
+        #IMPLEMENT IT IN self.index
 
+    #MAIN FUNCTION
     def extract_gwas(self, GWAS_ID) -> None:
         """
         grabs .tsv summary statistics associated with gwas id
@@ -27,7 +30,6 @@ class download_gwas_summary_stats:
         RETURNS: 
             None
         """
-        #TODO 1: see if you can access endpoint
 
         #get the url
         endpoint = self.find_endpoint(GWAS_ID) + "/"
@@ -40,10 +42,12 @@ class download_gwas_summary_stats:
         #if response.code == 200:
 
         #get the link using def extract_link
+        #TODO: ERROR HEREEEE, GO TO LINE 63 TO SEARCH FOR THE CASE HAT ENDPOINT IS A RANGE
         link = url + "/" + self.extract_link(response)
         
+        print(link)
         #TODO: WGET IS SLOOWWWWWW (~2 hours to download)
-        wget.download(link)
+        #wget.download(link)
 
     
     def extract_link(self, response: requests.Response) -> str:
@@ -56,6 +60,11 @@ class download_gwas_summary_stats:
         RETURNS:
             string associated with the link in the response object
         """
+
+        
+        #TODO: 
+        # - if endpoint is a range, look throught the range
+        # - if endpoint is single number, just go to the endpoint and extract 
         txts = response.text
 
         #iterate through the lines for the file
@@ -79,10 +88,35 @@ class download_gwas_summary_stats:
         RETURNS:
             a string that represents the endpoint that hosts the GWAS ID
         """
-        example = "GCST007999"
         df = pd.read_csv("gwas_catalog_index/index.csv", header = 0)
 
-        #TODO 1: Iterate through the dataframe, and find corresponding endpoint
-        #TODO 2: return endpoint
-        #TODO 3: see if you can access the .tsv file
+        #get the index
+        ID = int(GWAS_ID[4:])
+
+        endpoint = ""
+
+        #iterate through the id range column
+        for i in range(len(df["id_range"])):
+
+            range_ids = ast.literal_eval(df["id_range"][i])
+            # CASE1: if the id is in the range column, and range column only has 1 variable
+            if len(range_ids) == 1 and range_ids[0] == ID:  
+                endpoint = df["endpoints"][i]
+                print("%s endpoint found" % GWAS_ID)
+                break
+
+            #CASE2 : if id is in between the range, and range column has 2 values
+            elif range_ids[0] <= ID <= range_ids[1]:
+                endpoint = df["endpoints"][i]
+                print("%s endpoint found" % GWAS_ID)
+                break
+        
+        if not endpoint:
+            print("WARNING: %s endpoint not found" % GWAS_ID)
+
+        return endpoint
+
+        
+    
+
 

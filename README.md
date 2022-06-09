@@ -6,7 +6,7 @@
 
 Wrapper Class takes in a query string and creates a directory that will host all summary statistics of all potential GWAS studies associated with that query. 
 
-Object will then extract all GWAS Catalogs that are associated with query, and dowload summary statistics in order of the reponses from the endpoint. 
+Object will then extract all GWAS Catalog IDs that are associated with query, and dowload summary statistics in order of the reponses from the endpoint. 
 
 
 
@@ -58,7 +58,10 @@ python3 main.py --query heart
 ------------
 
 **TODOs**
-1. utils.datapull lines 85 - 87: finish finding proper endpoint given gwas id
-2.  utils.datapull line 30: see if endpoint can be accessed properly from master ftp direrctory
+1. **DONE**: utils.datapull lines 85 - 87: finish finding proper endpoint given gwas id
+2. utils.datapull line 30: see if endpoint can be accessed properly from master ftp direrctory
+    # TODO (line 45 in datapull.py): 
+    # - if endpoint is a range, look throught the range
+    # - if endpoint is single number, just go to the endpoint and extract 
 3. utils.data_pull line 18: create an iterator to access the gwas id list in a query folder
 4. fix the problem with wget slow
