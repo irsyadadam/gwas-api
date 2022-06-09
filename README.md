@@ -60,8 +60,8 @@ python3 main.py --query heart
 **TODOs**
 1. **DONE**: utils.datapull lines 85 - 87: finish finding proper endpoint given gwas id
 2. utils.datapull line 30: see if endpoint can be accessed properly from master ftp direrctory
-    # TODO (line 45 in datapull.py): 
-    # - if endpoint is a range, look throught the range
-    # - if endpoint is single number, just go to the endpoint and extract 
+    **TODO** (line 45 in datapull.py): 
+    - if endpoint is a range, look throught the range
+    - if endpoint is single number, just go to the endpoint and extract 
 3. utils.data_pull line 18: create an iterator to access the gwas id list in a query folder
 4. fix the problem with wget slow
