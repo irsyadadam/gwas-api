@@ -56,6 +56,18 @@ python3 main.py --query heart
 ```
 
 ------------
+## Data Preprocessing
+
+The final GWAS summary statistics should be in the following format:
+
+```
+CHR     BP      SNP             P           N
+1       717587  rs144155419     0.453345    279949
+1       740284  rs61770167      0.921906    282079
+1       769223  rs60320384      0.059349    281744
+```
+
+-------
 
 **TODOs**
 1. **DONE**: utils.datapull lines 85 - 87: finish finding proper endpoint given gwas id
