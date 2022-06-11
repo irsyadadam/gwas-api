@@ -1,7 +1,7 @@
 ![hello](https://img.shields.io/badge/Author-Irsyad-blue) 
 ![GitHub last commit](https://img.shields.io/github/last-commit/irsyadadam/gwas-api)
 ![GitHub](https://img.shields.io/github/license/irsyadadam/gwas-api)
-![Build](https://img.shields.io/badge/build-failed-red)
+![Build](https://img.shields.io/badge/build-passing-green)
 # GWAS Catalog API Wrapper
 
 Wrapper Class takes in a query string and creates a directory that will host all summary statistics of all potential GWAS studies associated with that query. 
