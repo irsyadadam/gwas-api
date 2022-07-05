@@ -24,54 +24,39 @@ from utils.data_pull import download_gwas_summary_stats
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="download all the gwas files given a gwas query from gwas catalog")
-    parser.add_argument("--query", type=str, help="query to extract relevant gwas ids", default="")
+    parser.add_argument("--folder", type=str, help="folder to go through and see query file, should only have a csv in it", default="")
     args = parser.parse_args()
 
     #check if proper parameters
-    assert type(args.query) == str
+    assert type(args.folder) == str
+
 
     print("starting gwas catalog api wrapper")
-    extractor = extracted_lists(args.query)
-    gwas_lists = extractor.gwas_list
+    print("folder: ", args.folder)
 
-    folder_name = "query_" + args.query
-    file_name = folder_name + "/gwas_id_list.txt"
+    folder_name = args.folder
 
-    #if folder doenst exist, write to it
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
+    if os.listdir(folder_name) == []:
+        print("query_file not found")
+        exit()
 
-    #if folder exists, do not write again
-    if not os.path.exists(file_name):
-        #add the list to the new folder
-        with open(file_name, 'w') as file:
-            file.write('\n'.join(gwas_lists))
-        print("gwas_id list saved to:", file_name)
 
-    print("gwas_id list found:", file_name)
+    query_file = "%s/%s" % (folder_name, os.listdir(folder_name)[0])
+    index = pd.read_csv(query_file)["Study accession"].tolist()
+
+    print("query_file found:", query_file)
 
     print("\n-------------------------------------\n")
 
-    print("download gwas files in %s?" % file_name)
-    val = input("y/n: ")
+    print("downloading summary statistics in", folder_name)
 
-    if val in ["y", "Y", "yes", "Yes", "YES"]:
-        print("\nbeginning download to %s" % folder_name)
+    date = datetime.now().strftime("_%H_%M_%d_%m_%Y")
+    log_name = folder_name + "/" + folder_name + date + ".log"
+    print("log file %s \n" % log_name)
+    logging.basicConfig(filename = log_name, format='%(asctime)s %(message)s', filemode='w')
+    logger = logging.getLogger()
 
-        date = datetime.now().strftime("_%H_%M_%d_%m_%Y")
-        log_name = folder_name + "/" + folder_name + date + ".log"
-        print("log file %s \n" % log_name)
-        logging.basicConfig(filename = log_name, format='%(asctime)s %(message)s', filemode='w')
-        logger = logging.getLogger()
+    
+    downloader = download_gwas_summary_stats(index, logger, folder_name)
 
-        downloader = download_gwas_summary_stats(file_name, logger)
-
-
-    elif val in ["n", "N", "no", "NO", "No"]:
-        print("download cancelled. finishing")
-        exit()
-
-    else:
-        print("invalid statement. exiting")
-        exit()
 

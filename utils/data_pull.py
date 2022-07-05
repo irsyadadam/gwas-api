@@ -9,6 +9,7 @@ import logging
 
 #iteration tracking
 from tqdm import tqdm
+import os
 
 
 #downloading
@@ -27,15 +28,16 @@ Process Hierarchy:
 """
 
 class download_gwas_summary_stats:
-    def __init__(self, index: str, logger):
+    def __init__(self, index: str, logger, folder):
         self.logger = logger
+        self.folder = folder
         self.index = self.iterate_through(index)
 
     def iterate_through(self, index) -> None:
         self.logger.info("relevant GWAS_ID statistics found")
-        with open(index) as f:
-            for i in tqdm(f.readlines(), desc = "downloading summary statistics"):
-                self.extract_gwas(i)
+        for i in tqdm(index, desc = "downloading summary statistics"):
+            self.extract_gwas(i)
+
 
     #MAIN FUNCTION
     def extract_gwas(self, GWAS_ID) -> None:
@@ -56,31 +58,24 @@ class download_gwas_summary_stats:
         #if endpointis a range of endpoints
         if len(endpoint) > len(GWAS_ID):
             url = 'http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/' + endpoint + "/" + GWAS_ID + "/"
-            response = requests.get(url=url)
-            if response.status_code == "200":
-                summary_stats_link = url + self.extract_link(response)
-                self.logger.warning("%s summary statistics found" % GWAS_ID)
-            else:
-                self.logger.warning("%s summary statistics not available in ftp" % GWAS_ID)
 
 
         #else if single gwas id endpoint
         elif endpoint == GWAS_ID:
             url = 'http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/' + endpoint + "/"
+
+
+        response = requests.get(url=url)
+        tsv_file = self.extract_link(response)
+        if tsv_file == None:
+            url = url + "harmonised/"
             response = requests.get(url=url)
-            if response.status_code == "200":
-                self.logger.warning("%s summary statistics found" % GWAS_ID)
-                summary_stats_link = url + self.extract_link(response)
-            else:
-                self.logger.warning("%s summary statistics not available in ftp" % GWAS_ID)
+            tsv_file = self.extract_link(response)
+            self.logger.warning("%s summary statistics not available in ftp" % GWAS_ID)
+        summary_stats_link = url + tsv_file
 
-
-        if (summary_stats_link):
-            print("final link", summary_stats_link)
-
-
-        #TODO: WGET IS SLOOWWWWWW (~2 hours to download)
-        #wget.download(link)
+        cmd = "wget -P %s %s" % (self.folder, summary_stats_link)
+        os.system(cmd)
 
     @classmethod
     def extract_link(self, response: requests.Response) -> str:
