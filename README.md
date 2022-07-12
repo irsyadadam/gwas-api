@@ -68,7 +68,3 @@ CHR     BP      SNP             P           N
 ```
 
 -------
-
-**TODOs**
-1. fix problem of missing files in ftp!
-2. fix the problem with wget slow
