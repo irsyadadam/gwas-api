@@ -4,10 +4,8 @@
 ![Build](https://img.shields.io/badge/build-passing-green)
 # GWAS Catalog API Wrapper
 
-Wrapper Class takes in a query string and creates a directory that will host all summary statistics of all potential GWAS studies associated with that query. 
-
-Object will then extract all GWAS Catalog IDs that are associated with query, and dowload summary statistics in order of the reponses from the endpoint. 
-
+The parameters of this wrapper class are an empty directory that constains a single query file from https://www.ebi.ac.uk/gwas/downloads/summary-statistics.
+The instance will then extract all available files corresponding to that query file and place it into the respective directory.
 
 
 **Project Goals**: 
@@ -38,21 +36,21 @@ pip install -r requirements.txt
 The following are the parameters for the API Wrapper:
 
 ```
-usage: main.py [-h] [--query QUERY]
+usage: main.py [-h] [--folder FOLDER]
 
 download all the gwas files given a gwas query from gwas catalog
 
 optional arguments:
   -h, --help     show this help message and exit
-  --query QUERY  query to extract relevant gwas ids
+  --folder FOLDER  folder to go through and see query file, should only have a csv in it
 ```
 
 Example Usage:
 
-The following command will create a directory names query_heart and download all GWAS summary statistics of GWAS studies correlating to the query "heart".
+The following command will search for the <code>heart/</code> folder for a query file, and download all of the gwas files associated with the term "heart". This will only happen if the query file is searched with the term "heart".
 
 ```
-python3 main.py --query heart
+python3 DOWNLOAD_GWAS.py --folder heart
 ```
 
 ------------
